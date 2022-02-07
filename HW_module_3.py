@@ -19,7 +19,7 @@ for p in paragraphs:
     # go through each word
     for n in range(len(p_split)):
         # in case when we face with index = 0 (the first word) OR when previous symbol was dot...
-        if n == 0 or p_split[n-1][-1] == '.':
+        if n == 0 or p_split[n-1][-1] == '.' or p_split[n-1][-1] == '!' or p_split[n-1][-1] == '?':
             # we should use the function capitalize()
             p_split[n] = p_split[n].capitalize()
         # if not, use lower() function
