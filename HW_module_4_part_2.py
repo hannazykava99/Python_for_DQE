@@ -10,6 +10,14 @@ text = """homEwork:
 
 # define functions with parameters
 
+
+def capitalize(index, word):
+    if index == 0 or word[index-1][-1] in ('.', '!', '?'):
+        word[index] = word[index].capitalize()
+    else:
+        word[index] = word[index].lower()
+
+
 def letter_case_normalization(txt):
     # create an empty list for normalized text
     normalized_text = []
@@ -21,13 +29,8 @@ def letter_case_normalization(txt):
         p_split = p.split(' ')
         # go through each word
         for n in range(len(p_split)):
-            # in case when we face with index = 0 (the first word) OR when previous symbol was dot...
-            if n == 0 or p_split[n-1][-1] == '.' or p_split[n-1][-1] == '!' or p_split[n-1][-1] == '?':
-                # we should use the function capitalize()
-                p_split[n] = p_split[n].capitalize()
-            # if not, use lower() function
-            else:
-                p_split[n] = p_split[n].lower()
+            # use capitalize function
+            capitalize(n, p_split)
         # join updated paragraphs by spaces and insert them into "normalized_text" variable
         normalized_text.append(' '.join(p_split))
     # join the paragraphs by tab into normalized text (\t)
@@ -55,6 +58,7 @@ print('Number of whitespace characters: ', number_whitespaces)
 print("---------------------------------------------------")
 print()
 
+
 # create one more sentence with last words of each existing sentence and add it to the end of this paragraph.
 def new_sentence(txt):
     import re
@@ -63,10 +67,7 @@ def new_sentence(txt):
     # print('last_words', last_words)
     # capitalize the first word and make the other in lower case
     for i in range(len(last_words)-1):
-        if i == 0:
-            last_words[i] = last_words[i].capitalize()
-        else:
-            last_words[i] = last_words[i].lower()
+        capitalize(i, last_words)
     # create new sentence by joining elements
     new_sentence = ' '.join(last_words)
     new_sentence = new_sentence + '.'
@@ -75,17 +76,30 @@ def new_sentence(txt):
 new_sentence = new_sentence(normalized_text)
 
 def add_sent_to_second_paragraph(sent):
-    sentence_upd = 'HARDCODED_VALUE_FOR_SPLIT' + sent
     # split "normalized_text" by paragraphs to make it easier to insert new sentence
     normalized_text_split = normalized_text.split('\n\n')
-    # insert new sentence to the end of the second paragraph
-    normalized_text_split.insert(2, sentence_upd)
-    # join paragraphs by double "\n" and insert them into "normalized_text_upd" variable
-    normalized_text_upd = '\n\n'.join(normalized_text_split)
-    # in order to put new sentence to the end of the second paragraph without creating new paragraph, we should perform such replacement:
-    normalized_text_upd = normalized_text_upd.split('\n\nHARDCODED_VALUE_FOR_SPLIT')
-    normalized_text_upd_2 = ' '.join(normalized_text_upd)
+    # insert new sentence to the end of the paragraph by template
+    x = 'not found'
+    # go through each paragraph to find the index of the required paragraph
+    # set this index by default (insert sentence in the end of the paragraph)
+    p_index = -1
+    for ind, p in enumerate(normalized_text_split):
+        # split by words
+        p = p.split(' ')
+        if x == 'not found':
+            # go through each word
+            for i in range(len(p)):
+                # let's find the paragraph by template
+                if p[i] == 'the' and p[i+1] == 'end' and p[i+2] == 'of' and p[i+3] == 'this' and p[i+4] == 'paragraph.':
+                    # when we find, we need to break the loop
+                    p_index = ind
+                    x = 'found'
+                    break
+    normalized_text_split[p_index] = normalized_text_split[p_index] + ' ' + sent
+    # join paragraphs by double "\n" and insert them into "normalized_text_upd_2" variable
+    normalized_text_upd_2 = '\n\n'.join(normalized_text_split)
     return normalized_text_upd_2
+
 
 normalized_text_with_sentence = add_sent_to_second_paragraph(new_sentence)
 
