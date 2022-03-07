@@ -99,7 +99,7 @@ if __name__ == "__main__":
                     FromAnotherSource().inserting(d)
                 print('The data from this file is published in Text.txt file')
                 print(f'This file {path_for_remove} will be removed now\n')
-                # os.remove(path_for_remove)
+                os.remove(path_for_remove)
         elif reply == '5':
             print('You have updated the document. The program is stopped.')
             CsvTasks().word_count()
