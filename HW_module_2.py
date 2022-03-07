@@ -30,8 +30,8 @@ for d in list_of_dict:  # go through each dictionary
 
 distinct_keys.sort()  # sort "distinct_keys" list in alphabetical order
 duplicated_keys.sort()  # sort "duplicated_keys" list in alphabetical order
-# print('Distinct_keys: ', distinct_keys)
-# print('Duplicated_keys: ', duplicated_keys)
+print('Distinct_keys: ', distinct_keys)
+print('Duplicated_keys: ', duplicated_keys)
 
 one_common_dict = {}  # create an empty common dictionary
 

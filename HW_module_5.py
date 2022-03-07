@@ -6,8 +6,8 @@ class FileInsert:
 
    # create a method which formats the text according to requirements
     def formatting(self, text):
-        text[0] = text[0] + ('-' * (40 - len(text[0])))
-        text.append(('-' * 40) + '\n')
+        text[0] = text[0] + ('' + '-' * (40 - len(text[0]))) + '\n'
+        text.append(('-' * 40) + '\n\n')
 
     # create a method which inserts the formatted text into text file (create this file if necessary or add new information if file exists)
     def inserting(self, text):
@@ -15,7 +15,7 @@ class FileInsert:
         with open("Text.txt", "a", encoding='utf-8') as file:
             self.formatting(text)
             for line in text:
-                file.write(line + '\n')
+                file.write(line)
 
 
 class CheckInput:
@@ -51,9 +51,10 @@ class News(FileInsert, CheckInput):
         data = []
         data.append('News: ')
         news = self.input_string('Enter the text of your news: ')
-        city = self.input_string('Enter the city: ')
-        data.append(news)
-        data.append(city.capitalize() + ', ' + str(datetime.now().strftime("%d/%m/%Y %H:%M")))
+        city = self.input_string('Enter the city:')
+        data.append(news + "\n")
+        data.append(city.capitalize() + ', ' + str(datetime.now().strftime("%d/%m/%Y %H:%M")) + "\n")
+        print(data)
         return data
 
 
@@ -87,9 +88,10 @@ class Advertisement(FileInsert, CheckInput):
                 comment = str(diff.days) + ' day left'
             else:
                 comment = str(diff.days) + ' days left'
-        data.append('Private Ad: ')
-        data.append(ad)
-        data.append('Actual until: ' + expiration_date.strftime("%d/%m/%Y") + ', ' + comment)
+        data.append('Private Ad:')
+        data.append(ad + "\n")
+        data.append('Actual until: ' + expiration_date.strftime("%d/%m/%Y") + ', ' + comment + "\n")
+        print(data)
         return data
 
 
@@ -98,7 +100,7 @@ class Divination(FileInsert, CheckInput):
     # create a method which creates a divination (user asks a question and gets an answer)
     def publishing(self):
         data = []
-        data.append('Question-divination: ')
+        data.append('Question-divination:')
         answers = ['It is certain', 'It is decidedly so', 'Without a doubt', 'Yes – definitely', 'As I see it, yes',
                         'Most likely', 'Ask again later', 'Better not tell you now', 'Cannot predict now', 'Concentrate and ask again',
                         'Don\'t count on it', 'My reply is no', 'My sources say no', 'Very doubtful']
@@ -108,12 +110,13 @@ class Divination(FileInsert, CheckInput):
             # check that user ask a question: the input should contain "?" at the end of sentence
             if question[-1] == '?':
                 is_true = False
-                data.append(question)
+                data.append(question + "\n")
             else:
                 print('It seems you didn\'t write a question')
         # generate a divination using random lib
-        data.append(answers[randint(0, len(answers) - 1)])
-        data.append('I hope that helped!')
+        data.append(answers[randint(0, len(answers) - 1)] + "\n")
+        data.append('I hope that helped!' + "\n")
+        print(data)
         return data
 
 
@@ -139,3 +142,5 @@ if __name__ == "__main__":
             break
         else:
             print('Try again')
+
+

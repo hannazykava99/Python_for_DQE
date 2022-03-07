@@ -31,10 +31,10 @@ try:  # let's check if we don't divide by zero
     even_avg = even_summa / even_count  # then calculate the average for even numbers
     print("Average for even numbers from the array: ", even_avg)  # print the result for even numbers
 except ZeroDivisionError:  # if we divide by zero
-    print("It's impossible to calculate average for even numbers because we can't delete by zero")  # we should print the text with explanation that we can't calculate average for even numbers
+    print("It's impossible to calculate average for even numbers because we can't delete by zero")  # we should print the text with explanation
 
 try:  # let's check if we don't divide by zero
     odd_avg = odd_summa / odd_count  # then calculate the average for odd numbers
     print("Average for odd numbers from the array: ", odd_avg)  # print the result for odd numbers
 except ZeroDivisionError:  # if we divide by zero
-    print("It's impossible to calculate average for odd numbers because we can't delete by zero")  # we should print the text with explanation that we can't calculate average for odd numbers
+    print("It's impossible to calculate average for odd numbers because we can't delete by zero")  # we should print the text with explanation

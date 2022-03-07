@@ -1,7 +1,7 @@
 from datetime import datetime, date
 from random import randint
 from HW_module_4_part_2 import letter_case_normalization as normalize
-import sys, os
+import os
 
 class FileInsert:
 
@@ -28,7 +28,7 @@ class CheckInput:
                 break
             except:
                 print('Enter a numeric value, please')
-        print(val)
+        # print(val)
         return val
 
     # create a method which checks that we don't leave the input field empty (if it is empty - try again)
@@ -39,7 +39,7 @@ class CheckInput:
                 break
             else:
                 print('Enter something, please')
-        print(val)
+        # print(val)
         return val
 
 
@@ -124,7 +124,7 @@ class FromAnotherSource(FileInsert):
 
     # create a method which makes another directories and reads a file from that directory OR use the default one
     def read_file(self):
-        original_path = os.getcwd()
+        original_path = os.path.dirname(os.path.realpath(__file__))
         print(f'Your default directory is "{os.getcwd()}"')
         answer = CheckInput().input_int(
             f'If you want to ingest your file from default directory - enter 1, if you want to change it - enter 2: ')
@@ -160,7 +160,7 @@ class FromAnotherSource(FileInsert):
                     with open(file_name, "r", encoding='utf-8') as source:
                         f_contents = source.readlines()
                     print('Such file exists')
-                    path_for_remove = str(change_path) + '/' + str(file_name)
+                    path_for_remove = os.path.join(str(change_path), str(file_name))
                     os.chdir(original_path)
                     break
                 except FileNotFoundError:
@@ -175,7 +175,6 @@ class FromAnotherSource(FileInsert):
     def publishing(self):
         f_contents, path_for_remove = self.read_file()
         i = 0
-        # print(f_contents)
         insert_into_file = []
         while i < len(f_contents):
             try:
@@ -243,10 +242,9 @@ if __name__ == "__main__":
                     FromAnotherSource().inserting(d)
                 print('The data from this file is published in Text.txt file')
                 print(f'This file {path_for_remove} will be removed now\n')
-                os.remove(path_for_remove)
+                # os.remove(path_for_remove)
         elif reply == '5':
             print('You have updated the document. The program is stopped.')
             break
         else:
             print('Try again')
-

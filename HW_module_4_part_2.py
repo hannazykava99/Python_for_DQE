@@ -38,8 +38,6 @@ def letter_case_normalization(txt):
     return final_text
 
 
-# call the function with the defined parameter
-normalized_text = letter_case_normalization(text)
 
 # calculate number of whitespace characters in this text
 def sum_whitespaces(txt):
@@ -49,15 +47,6 @@ def sum_whitespaces(txt):
     whitespaces = re.findall('\s', txt)
     len_whitespaces = len(whitespaces)
     return len_whitespaces
-
-number_whitespaces = sum_whitespaces(text)
-
-# print the result
-print('Number of whitespace characters: ', number_whitespaces)
-
-print("---------------------------------------------------")
-print()
-
 
 # create one more sentence with last words of each existing sentence and add it to the end of this paragraph.
 def new_sentence(txt):
@@ -73,7 +62,7 @@ def new_sentence(txt):
     new_sentence = new_sentence + '.'
     return new_sentence
 
-new_sentence = new_sentence(normalized_text)
+
 
 def add_sent_to_second_paragraph(sent):
     # split "normalized_text" by paragraphs to make it easier to insert new sentence
@@ -101,7 +90,7 @@ def add_sent_to_second_paragraph(sent):
     return normalized_text_upd_2
 
 
-normalized_text_with_sentence = add_sent_to_second_paragraph(new_sentence)
+
 
 
 def correct_iz_to_is(txt):
@@ -111,7 +100,6 @@ def correct_iz_to_is(txt):
     normalized_text_upd_3 = re.sub(' iz ', ' is ', txt)
     return normalized_text_upd_3
 
-corrected_text = correct_iz_to_is(normalized_text_with_sentence)
 
 def add_space_before_quote(a):
     import re
@@ -121,5 +109,24 @@ def add_space_before_quote(a):
     normalized_text_upd_4 = re.sub('  ', ' ', normalized_text_upd_4)
     return normalized_text_upd_4
 
-final_text = add_space_before_quote(corrected_text)
-print(final_text)
+
+if __name__ == "__main__":
+    # call the function with the defined parameter
+    normalized_text = letter_case_normalization(text)
+
+    number_whitespaces = sum_whitespaces(text)
+
+    # print the result
+    print('Number of whitespace characters: ', number_whitespaces)
+
+    print("---------------------------------------------------")
+    print()
+
+    new_sentence = new_sentence(normalized_text)
+
+    normalized_text_with_sentence = add_sent_to_second_paragraph(new_sentence)
+
+    corrected_text = correct_iz_to_is(normalized_text_with_sentence)
+
+    final_text = add_space_before_quote(corrected_text)
+    print(final_text)
