@@ -34,7 +34,7 @@ class CsvTasks:
                              'percentage': round((count_all / all_count) * 100, 2)})
             list_of_dict.append(dict)
 
-        with open('letter_count.csv', "w", newline="") as csvfile:
+        with open('Letter_count.csv', "w", newline="") as csvfile:
             columns = ["letter", "count_all", "count_uppercase", "percentage"]
             writer = csv.DictWriter(csvfile, fieldnames=columns)
             writer.writeheader()
@@ -60,7 +60,7 @@ class CsvTasks:
             else:
                 words_count[i] = 1
 
-        with open('word_count.csv', 'w', encoding='utf-8') as csvfile:
+        with open('Word_count.csv', 'w', encoding='utf-8') as csvfile:
             writer = csv.writer(csvfile, delimiter=",", lineterminator="\r")
             for key, value in words_count.items():
                 writer.writerow([key, value])

@@ -1,0 +1,25 @@
+[
+    {
+        "type": "News",
+        "text": "The War is started",
+        "city": "Kiev",
+        "date": "08/03/2022 21:58"
+    },
+    {
+        "type": "News",
+        "text": "Something amazing is happened",
+        "city": "Moscow",
+        "date": "01/03/2022 21:58"
+    },
+    {
+        "type": "Private Ad",
+        "text": "I want to sell a book",
+        "date": "Actual until: 12/03/2022, 4 days left"
+    },
+        {
+        "type": "Question-divination",
+        "question": "Will I be a singer?",
+        "answer": "Yes – definitely",
+        "conclusion": "I hope that helped!"
+    }
+]

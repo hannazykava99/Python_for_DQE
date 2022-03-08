@@ -207,6 +207,7 @@ class FromAnotherSource(FileInsert):
             except IndexError:
                 insert_into_file = 'Empty'
                 break
+        # print(insert_into_file)
         return insert_into_file, path_for_remove
 
 
