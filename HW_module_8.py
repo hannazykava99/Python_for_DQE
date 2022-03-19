@@ -9,49 +9,53 @@ class FromJson(FileInsert):
     def read_file(self):
         original_path = os.path.dirname(os.path.realpath(__file__))
         print(f'Your default directory is "{os.getcwd()}"')
-        answer = CheckInput().input_int(
-            f'If you want to ingest your file from default directory - enter 1, if you want to change it - enter 2: ')
-        if answer == 1:
-            while True:
-                try:
-                    file_name = CheckInput().input_string('Enter the file name with its format: ')
-                    with open(file_name, "r", encoding='utf-8') as read_file:
-                        lict_of_dicts = json.load(read_file)
-                    print('Okay, such file exists')
-                    path_for_remove = str(file_name)
-                    break
-                except FileNotFoundError:
-                    print('No file with such name. Try again')
-                except PermissionError:
-                    print('No file with such name. Try again')
-        elif answer == 2:
-            while True:
-                try:
-                    change_path = input('Enter the file path: ')
-                    if not os.path.isdir(change_path):
-                        os.mkdir(change_path)
-                    os.chdir(change_path)
-                    print(f'Now you directory is "{os.getcwd()}"')
-                    break
-                except SyntaxError:
-                    print('You made a mistake. Try again')
-                except FileNotFoundError:
-                    print('You made a mistake. Try again')
-            while True:
-                try:
-                    file_name = CheckInput().input_string('Enter the file name with its format: ')
-                    with open(file_name, "r", encoding='utf-8') as read_file:
-                        lict_of_dicts = json.load(read_file)
-                    print('Such file exists')
-                    path_for_remove = os.path.join(str(change_path), str(file_name))
-                    os.chdir(original_path)
-                    break
-                except FileNotFoundError:
-                    print('No file with such name. Try again')
-                except PermissionError:
-                    print('No file with such name. Try again')
-        else:
-            print('Try again')
+        is_true = True
+        while is_true:
+            answer = CheckInput().input_int(
+                f'If you want to ingest your file from default directory - enter 1, if you want to change it - enter 2: ')
+            if answer == 1:
+                while True:
+                    try:
+                        file_name = CheckInput().input_string('Enter the file name with its format: ')
+                        with open(file_name, "r", encoding='utf-8') as read_file:
+                            lict_of_dicts = json.load(read_file)
+                        print('Okay, such file exists')
+                        path_for_remove = str(file_name)
+                        is_true = False
+                        break
+                    except FileNotFoundError:
+                        print('No file with such name. Try again')
+                    except PermissionError:
+                        print('No file with such name. Try again')
+            elif answer == 2:
+                while True:
+                    try:
+                        change_path = input('Enter the file path: ')
+                        if not os.path.isdir(change_path):
+                            os.mkdir(change_path)
+                        os.chdir(change_path)
+                        print(f'Now you directory is "{os.getcwd()}"')
+                        break
+                    except SyntaxError:
+                        print('You made a mistake. Try again')
+                    except FileNotFoundError:
+                        print('You made a mistake. Try again')
+                while True:
+                    try:
+                        file_name = CheckInput().input_string('Enter the file name with its format: ')
+                        with open(file_name, "r", encoding='utf-8') as read_file:
+                            lict_of_dicts = json.load(read_file)
+                        print('Such file exists')
+                        path_for_remove = os.path.join(str(change_path), str(file_name))
+                        os.chdir(original_path)
+                        is_true = False
+                        break
+                    except FileNotFoundError:
+                        print('No file with such name. Try again')
+                    except PermissionError:
+                        print('No file with such name. Try again')
+            else:
+                print('Try again')
         return lict_of_dicts, path_for_remove
 
     def publishing(self):
@@ -59,28 +63,45 @@ class FromJson(FileInsert):
 
         insert_into_file = []
         try:
-            for d in lict_of_dicts:
+            for i, d in enumerate(lict_of_dicts):
                 data = []
                 if d["type"] == 'News':
-                    data.append('News:')
-                    data.append(d["text"] + "\n")
-                    data.append(d["city"] + ', ' + str(d["date"]) + "\n")
-                    insert_into_file.append(data)
+                    if len(d["text"]) > 0 and len(d["city"]) > 0 and len(d["date"]) > 0:
+                        data.append('News:')
+                        data.append(d["text"] + "\n")
+                        data.append(d["city"] + ', ' + str(d["date"]) + "\n")
+                        insert_into_file.append(data)
+                    else:
+                        insert_into_file = 'Empty'
+                        print('Some mistake was found for news in block #', i + 1, sep='')
+                        break
                 elif d["type"] == 'Private Ad':
-                    data.append('Private Ad:')
-                    data.append(d["text"] + "\n")
-                    data.append(str(d["date"]) + "\n")
-                    insert_into_file.append(data)
+                    if len(d["text"]) > 0 and len(d["date"]) > 0:
+                        data.append('Private Ad:')
+                        data.append(d["text"] + "\n")
+                        data.append(str(d["date"]) + "\n")
+                        insert_into_file.append(data)
+                    else:
+                        insert_into_file = 'Empty'
+                        print('Some mistake was found for ad in block #', i + 1, sep='')
+                        break
                 elif d["type"] == 'Question-divination':
-                    data.append('Question-divination:')
-                    data.append(d["question"] + "\n")
-                    data.append(d["answer"] + "\n")
-                    data.append(d["conclusion"] + "\n")
-                    insert_into_file.append(data)
+                    if len(d["question"]) > 0 and len(d["answer"]) > 0 and len(d["conclusion"]) > 0:
+                        data.append('Question-divination:')
+                        data.append(d["question"] + "\n")
+                        data.append(d["answer"] + "\n")
+                        data.append(d["conclusion"] + "\n")
+                        insert_into_file.append(data)
+                    else:
+                        insert_into_file = 'Empty'
+                        print('Some mistake was found for ad in block #', i + 1, sep='')
+                        break
                 else:
+                    print('Some unknown type of records was found')
                     insert_into_file = 'Empty'
                     break
         except KeyError:
+            print('Some important field is absent for block #', i + 1, sep='')
             insert_into_file = 'Empty'
 
         return insert_into_file, path_for_remove
@@ -137,5 +158,4 @@ if __name__ == "__main__":
             break
         else:
             print('Try again')
-
 

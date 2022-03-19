@@ -15,13 +15,20 @@ class CsvTasks:
 
         elements = []
         for i in txt:
-            if i not in (' ', "\n", "\t"):
+            if i.isalpha():
                 elements.append(i)
 
         all_count = len(elements)
 
+        distinct_elements = []
+        for i in elements:
+            if i.lower() not in distinct_elements:
+                distinct_elements.append(i.lower())
+
+        distinct_string = "".join(distinct_elements)
+
         list_of_dict = []
-        for b in ascii_lowercase:
+        for b in distinct_string:
             count_all = 0
             count_upper = 0
             dict = {}
@@ -34,7 +41,7 @@ class CsvTasks:
                              'percentage': round((count_all / all_count) * 100, 2)})
             list_of_dict.append(dict)
 
-        with open('Letter_count.csv', "w", newline="") as csvfile:
+        with open('Letter_count.csv', "w", newline="", encoding='utf-8') as csvfile:
             columns = ["letter", "count_all", "count_uppercase", "percentage"]
             writer = csv.DictWriter(csvfile, fieldnames=columns)
             writer.writeheader()
@@ -47,7 +54,7 @@ class CsvTasks:
         with open("Text.txt", "r", encoding='utf-8') as file:
             txt = file.read()
 
-        all_words = re.findall("\w+[^ ,!?.:/\n]?\w*", txt)
+        all_words = re.findall("\w*'*[^\d ,!?.:–/\n+-]", txt)
 
         words_lowercase = []
         for i in all_words:
@@ -108,5 +115,6 @@ if __name__ == "__main__":
             break
         else:
             print('Try again')
+
 
 

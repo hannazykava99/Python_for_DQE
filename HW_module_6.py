@@ -126,88 +126,97 @@ class FromAnotherSource(FileInsert):
     def read_file(self):
         original_path = os.path.dirname(os.path.realpath(__file__))
         print(f'Your default directory is "{os.getcwd()}"')
-        answer = CheckInput().input_int(
-            f'If you want to ingest your file from default directory - enter 1, if you want to change it - enter 2: ')
-        if answer == 1:
-            while True:
-                try:
-                    file_name = CheckInput().input_string('Enter the file name with its format: ')
-                    with open(file_name, "r", encoding='utf-8') as source:
-                        f_contents = source.readlines()
-                    print('Okay, such file exists')
-                    path_for_remove = str(file_name)
-                    break
-                except FileNotFoundError:
-                    print('No file with such name. Try again')
-                except PermissionError:
-                    print('No file with such name. Try again')
-        elif answer == 2:
-            while True:
-                try:
-                    change_path = input('Enter the file path: ')
-                    if not os.path.isdir(change_path):
-                        os.mkdir(change_path)
-                    os.chdir(change_path)
-                    print(f'Now you directory is "{os.getcwd()}"')
-                    break
-                except SyntaxError:
-                    print('You made a mistake. Try again')
-                except FileNotFoundError:
-                    print('You made a mistake. Try again')
-            while True:
-                try:
-                    file_name = CheckInput().input_string('Enter the file name with its format: ')
-                    with open(file_name, "r", encoding='utf-8') as source:
-                        f_contents = source.readlines()
-                    print('Such file exists')
-                    path_for_remove = os.path.join(str(change_path), str(file_name))
-                    os.chdir(original_path)
-                    break
-                except FileNotFoundError:
-                    print('No file with such name. Try again')
-                except PermissionError:
-                    print('No file with such name. Try again')
-        else:
-            print('Try again')
+        is_true = True
+        while is_true:
+            answer = CheckInput().input_int(
+                f'If you want to ingest your file from default directory - enter 1, if you want to change it - enter 2: ')
+            if answer == 1:
+                while True:
+                    try:
+                        file_name = CheckInput().input_string('Enter the file name with its format: ')
+                        with open(file_name, "r", encoding='utf-8') as source:
+                            f_contents = source.readlines()
+                        print('Okay, such file exists')
+                        path_for_remove = str(file_name)
+                        is_true = False
+                        break
+                    except FileNotFoundError:
+                        print('No file with such name. Try again')
+                    except PermissionError:
+                        print('No file with such name. Try again')
+            elif answer == 2:
+                while True:
+                    try:
+                        change_path = input('Enter the file path: ')
+                        if not os.path.isdir(change_path):
+                            os.mkdir(change_path)
+                        os.chdir(change_path)
+                        print(f'Now you directory is "{os.getcwd()}"')
+                        break
+                    except SyntaxError:
+                        print('You made a mistake. Try again')
+                    except FileNotFoundError:
+                        print('You made a mistake. Try again')
+                while True:
+                    try:
+                        file_name = CheckInput().input_string('Enter the file name with its format: ')
+                        with open(file_name, "r", encoding='utf-8') as source:
+                            f_contents = source.readlines()
+                        print('Such file exists')
+                        path_for_remove = os.path.join(str(change_path), str(file_name))
+                        os.chdir(original_path)
+                        is_true = False
+                        break
+                    except FileNotFoundError:
+                        print('No file with such name. Try again')
+                    except PermissionError:
+                        print('No file with such name. Try again')
+            else:
+                print('Try again')
         return f_contents, path_for_remove
 
     # create a method which accumulate all data pieces from another file
     def publishing(self):
         f_contents, path_for_remove = self.read_file()
-        i = 0
+        # print(f_contents)
         insert_into_file = []
-        while i < len(f_contents):
-            try:
-                data = []
-                if f_contents[i] == 'News:\n' and len(f_contents[i+1]) > 1 and len(f_contents[i+2]) > 1 and f_contents[i+1][-1] == '\n' and f_contents[i+2][-1] == '\n' and f_contents[i+3] == '\n':
+        for i in range(len(f_contents) - 1):
+            data = []
+            if f_contents[i] == 'News:\n' or f_contents[i] == 'News\n':
+                if len(f_contents[i + 1]) > 1 and len(f_contents[i + 2]) > 1 and f_contents[i + 1][-1] == '\n' and \
+                        f_contents[i + 2][-1] == '\n':
                     data.append('News:')
-                    data.append(normalize(f_contents[i+1]))
-                    data.append((f_contents[i+2]).capitalize())
-                    # print(data)
+                    data.append(normalize(f_contents[i + 1]))
+                    data.append((f_contents[i + 2]).capitalize())
                     insert_into_file.append(data)
-                    i += 4
-                elif f_contents[i] == 'Private Ad:\n' and len(f_contents[i+1]) > 1 and len(f_contents[i+2]) > 1 and f_contents[i+1][-1] == '\n' and f_contents[i+2][-1] == '\n' and f_contents[i+3] == '\n':
-                    data.append('Private Ad:')
-                    data.append(normalize(f_contents[i+1]))
-                    data.append(f_contents[i+2])
-                    # print(data)
-                    insert_into_file.append(data)
-                    i += 4
-                elif f_contents[i] == 'Question-divination:\n' and len(f_contents[i+1]) > 1 and len(f_contents[i+2]) > 1 and len(f_contents[i+3]) > 1 and f_contents[i+1][-1] == '\n' and f_contents[i+2][-1] == '\n' and f_contents[i+3][-1] == '\n' and f_contents[i+4] == '\n':
-                    data.append('Question-divination:')
-                    data.append(normalize(f_contents[i+1]))
-                    data.append(f_contents[i+2])
-                    data.append(f_contents[i+3])
-                    # print(data)
-                    insert_into_file.append(data)
-                    i += 5
                 else:
                     insert_into_file = 'Empty'
+                    print('Some mistake was found for news in raw #', i + 1, sep='')
                     break
-            except IndexError:
-                insert_into_file = 'Empty'
-                break
-        # print(insert_into_file)
+            elif f_contents[i] == 'Private Ad:\n' or f_contents[i] == 'Private Ad\n':
+                if len(f_contents[i + 1]) > 1 and len(f_contents[i + 2]) > 1 and f_contents[i + 1][-1] == '\n' and \
+                        f_contents[i + 2][-1] == '\n':
+                    data.append('Private Ad:')
+                    data.append(normalize(f_contents[i + 1]))
+                    data.append(f_contents[i + 2])
+                    insert_into_file.append(data)
+                else:
+                    insert_into_file = 'Empty'
+                    print('Some mistake was found for ad in raw #', i + 1, sep='')
+                    break
+            elif f_contents[i] == 'Question-divination:\n' or f_contents[i] == 'Question-divination\n':
+                if len(f_contents[i + 1]) > 1 and len(f_contents[i + 2]) > 1 and len(f_contents[i + 3]) > 1 and \
+                        f_contents[i + 1][-1] == '\n' and f_contents[i + 2][-1] == '\n' and f_contents[i + 3][
+                    -1] == '\n':
+                    data.append('Question-divination:')
+                    data.append(normalize(f_contents[i + 1]))
+                    data.append(f_contents[i + 2])
+                    data.append(f_contents[i + 3])
+                    insert_into_file.append(data)
+                else:
+                    insert_into_file = 'Empty'
+                    print('Some mistake was found for divination in raw #', i + 1, sep='')
+                    break
         return insert_into_file, path_for_remove
 
 
@@ -243,7 +252,7 @@ if __name__ == "__main__":
                     FromAnotherSource().inserting(d)
                 print('The data from this file is published in Text.txt file')
                 print(f'This file {path_for_remove} will be removed now\n')
-                # os.remove(path_for_remove)
+                os.remove(path_for_remove)
         elif reply == '5':
             print('You have updated the document. The program is stopped.')
             break
