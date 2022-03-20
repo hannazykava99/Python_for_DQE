@@ -54,7 +54,7 @@ class CsvTasks:
         with open("Text.txt", "r", encoding='utf-8') as file:
             txt = file.read()
 
-        all_words = re.findall("\w*'*[^\d ,!?.:–/\n+-]", txt)
+        all_words = re.findall("\w*'*[^\d ,!?.:_№#–/\n+-]", txt)
 
         words_lowercase = []
         for i in all_words:
