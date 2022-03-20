@@ -94,7 +94,7 @@ class FromJson(FileInsert):
                         insert_into_file.append(data)
                     else:
                         insert_into_file = 'Empty'
-                        print('Some mistake was found for ad in block #', i + 1, sep='')
+                        print('Some mistake was found for divination in block #', i + 1, sep='')
                         break
                 else:
                     print('Some unknown type of records was found')
@@ -154,7 +154,7 @@ if __name__ == "__main__":
             print('You have updated the Text.txt file. The program is stopped.')
             CsvTasks().word_count()
             CsvTasks().letter_count()
-            print('Word_count.csv and letter.csv files are updated')
+            print('Word_count.csv and letter_count.csv files are updated')
             break
         else:
             print('Try again')

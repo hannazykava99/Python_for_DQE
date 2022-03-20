@@ -111,7 +111,7 @@ if __name__ == "__main__":
             print('You have updated the document. The program is stopped.')
             CsvTasks().word_count()
             CsvTasks().letter_count()
-            print('Word_count.csv and letter.csv files are updated')
+            print('Word_count.csv and letter_count.csv files are updated')
             break
         else:
             print('Try again')
