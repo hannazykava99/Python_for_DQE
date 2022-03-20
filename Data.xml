@@ -1,0 +1,22 @@
+<records>
+    <block type = 'News'>
+        <text>Something happened</text>
+        <city>Minsk</city>
+        <date>20/03/2022 17:23</date>
+    </block>
+    <block type = 'Private Ad'>
+        <text>I want to sell something</text>
+        <date>Actual until: 02/02/2022, Advertising is outdated</date>
+    </block>
+        <block type = 'Question-divination'>
+        <question>Will I see a UFO?</question>
+        <answer>It is certain</answer>
+        <conclusion>I hope that helped!</conclusion>
+    </block>
+    <block type = 'News'>
+        <text>Amazing news!</text>
+        <city>Tbilisi</city>
+        <date>20/03/2022 17:23</date>
+    </block>
+</records>
+

@@ -1,10 +1,11 @@
 from HW_module_6 import News, Advertisement, Divination, FromAnotherSource, FileInsert, CheckInput
 from HW_module_7 import CsvTasks
-import json
+from HW_module_8 import FromJson
 import os
+import xml.etree.ElementTree as et
 
 
-class FromJson(FileInsert):
+class FromXml(FileInsert):
 
     def read_file(self):
         original_path = os.path.dirname(os.path.realpath(__file__))
@@ -17,8 +18,7 @@ class FromJson(FileInsert):
                 while True:
                     try:
                         file_name = CheckInput().input_string('Enter the file name with its format: ')
-                        with open(file_name, "r", encoding='utf-8') as read_file:
-                            lict_of_dicts = json.load(read_file)
+                        xml_file = et.parse(file_name)
                         print('Okay, such file exists')
                         path_for_remove = str(file_name)
                         is_true = False
@@ -27,9 +27,8 @@ class FromJson(FileInsert):
                         print('No file with such name. Try again')
                     except PermissionError:
                         print('No file with such name. Try again')
-                    except json.decoder.JSONDecodeError:
-                        print('Incorrect file .json structure')
-
+                    except et.ParseError:
+                        print('Incorrect file .xml structure')
             elif answer == 2:
                 while True:
                     try:
@@ -46,9 +45,8 @@ class FromJson(FileInsert):
                 while True:
                     try:
                         file_name = CheckInput().input_string('Enter the file name with its format: ')
-                        with open(file_name, "r", encoding='utf-8') as read_file:
-                            lict_of_dicts = json.load(read_file)
-                        print('Such file exists')
+                        xml_file = et.parse(file_name)
+                        print('Okay, such file exists')
                         path_for_remove = os.path.join(str(change_path), str(file_name))
                         os.chdir(original_path)
                         is_true = False
@@ -57,57 +55,65 @@ class FromJson(FileInsert):
                         print('No file with such name. Try again')
                     except PermissionError:
                         print('No file with such name. Try again')
-                    except json.decoder.JSONDecodeError:
-                        print('Incorrect file .json structure')
+                    except et.ParseError:
+                        print('Incorrect file .xml structure')
             else:
                 print('Try again')
-        return lict_of_dicts, path_for_remove
+        return xml_file, path_for_remove
 
     def publishing(self):
-        lict_of_dicts, path_for_remove = self.read_file()
-
+        xml_file, path_for_remove = self.read_file()
+        root = xml_file.getroot()
         insert_into_file = []
-        try:
-            for i, d in enumerate(lict_of_dicts):
-                data = []
-                if d["type"] == 'News':
-                    if len(d["text"]) > 0 and len(d["city"]) > 0 and len(d["date"]) > 0:
-                        data.append('News:')
-                        data.append(d["text"] + "\n")
-                        data.append(d["city"] + ', ' + str(d["date"]) + "\n")
-                        insert_into_file.append(data)
-                    else:
-                        insert_into_file = 'Empty'
-                        print('Some mistake was found for news in block #', i + 1, sep='')
-                        break
-                elif d["type"] == 'Private Ad':
-                    if len(d["text"]) > 0 and len(d["date"]) > 0:
-                        data.append('Private Ad:')
-                        data.append(d["text"] + "\n")
-                        data.append(str(d["date"]) + "\n")
-                        insert_into_file.append(data)
-                    else:
-                        insert_into_file = 'Empty'
-                        print('Some mistake was found for ad in block #', i + 1, sep='')
-                        break
-                elif d["type"] == 'Question-divination':
-                    if len(d["question"]) > 0 and len(d["answer"]) > 0 and len(d["conclusion"]) > 0:
-                        data.append('Question-divination:')
-                        data.append(d["question"] + "\n")
-                        data.append(d["answer"] + "\n")
-                        data.append(d["conclusion"] + "\n")
-                        insert_into_file.append(data)
-                    else:
-                        insert_into_file = 'Empty'
-                        print('Some mistake was found for divination in block #', i + 1, sep='')
-                        break
-                else:
-                    print('Some unknown type of records was found')
+        for i in root.iter('block'):
+            data = []
+            if i.get('type') == 'News':
+                try:
+                    data.append('News:')
+                    data.append(i.find('text').text + "\n")
+                    data.append(i.find('city').text + ', ' + i.find('date').text + "\n")
+                    insert_into_file.append(data)
+                except AttributeError:
+                    print("Important tag was absent for news")
                     insert_into_file = 'Empty'
                     break
-        except KeyError:
-            print('Some important field is absent for block #', i + 1, sep='')
-            insert_into_file = 'Empty'
+                except TypeError:
+                    print("Empty text in tag for news was found")
+                    insert_into_file = 'Empty'
+                    break
+            elif i.get('type') == 'Private Ad':
+                try:
+                    data.append('News:')
+                    data.append(i.find('text').text + "\n")
+                    data.append(i.find('date').text + "\n")
+                    insert_into_file.append(data)
+                except AttributeError:
+                    print("Important tag was absent for ad")
+                    insert_into_file = 'Empty'
+                    break
+                except TypeError:
+                    print("Empty text in tag for ad was found")
+                    insert_into_file = 'Empty'
+                    break
+            elif i.get('type') == 'Question-divination':
+                try:
+                    data.append('News:')
+                    data.append(i.find('question').text + "\n")
+                    data.append(i.find('answer').text + "\n")
+                    data.append(i.find('conclusion').text + "\n")
+                    insert_into_file.append(data)
+                except AttributeError:
+                    print("Important tag was absent for divination")
+                    insert_into_file = 'Empty'
+                    break
+                except TypeError:
+                    print("Empty text in tag for divination was found")
+                    insert_into_file = 'Empty'
+                    break
+            else:
+                print('Some unknown type of records was found')
+                insert_into_file = 'Empty'
+                break
 
         return insert_into_file, path_for_remove
 
@@ -115,7 +121,7 @@ class FromJson(FileInsert):
 if __name__ == "__main__":
     # ask a user what data he wants to print and then call a class and insert the data into file using inserting method
     while True:
-        print('What do you want to print?', '1 - News', '2 - Private Ad', '3 - Divination', '4 - Add data from another .txt file', '5 - Add data from .json file', '6 - Nothing', sep='\n')
+        print('What do you want to print?', '1 - News', '2 - Private Ad', '3 - Divination', '4 - Add data from another .txt file', '5 - Add data from .json file', '6 - Add data from .xml file', '7 - Nothing', sep='\n')
         reply = input('Choose the appropriate number: ')
         print()
         if reply == '1':
@@ -136,7 +142,7 @@ if __name__ == "__main__":
         elif reply == '4':
             data, path_for_remove = FromAnotherSource().publishing()
             if data == 'Empty':
-                print('Something went wrong with insertion data from the file. Please fix the format of incoming file and try again\n')
+                print('Something went wrong with insertion data from the .txt file. Please fix the format of incoming file and try again\n')
             else:
                 for d in data:
                     FromAnotherSource().formatting(d)
@@ -156,6 +162,17 @@ if __name__ == "__main__":
                 print(f'This file {path_for_remove} will be removed now\n')
                 os.remove(path_for_remove)
         elif reply == '6':
+            data, path_for_remove = FromXml().publishing()
+            if data == 'Empty':
+                print('Something went wrong with insertion data from the .xml file. Please fix the format of incoming file and try again\n')
+            else:
+                for d in data:
+                    FromXml().formatting(d)
+                    FromXml().inserting(d)
+                print('The data from this file is published in Text.txt file')
+                print(f'This file {path_for_remove} will be removed now\n')
+                os.remove(path_for_remove)
+        elif reply == '7':
             print('You have updated the Text.txt file. The program is stopped.')
             CsvTasks().word_count()
             CsvTasks().letter_count()
@@ -163,4 +180,3 @@ if __name__ == "__main__":
             break
         else:
             print('Try again')
-
