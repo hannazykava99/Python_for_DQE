@@ -162,5 +162,5 @@ if __name__ == "__main__":
         else:
             print('Try again')
 
-DBInsert().selecting_all_tables()
+# DBInsert().selecting_all_tables()
 
