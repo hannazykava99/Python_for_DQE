@@ -83,7 +83,7 @@ class FromXml(FileInsert):
                     break
             elif i.get('type') == 'Private Ad':
                 try:
-                    data.append('News:')
+                    data.append('Private Ad:')
                     data.append(i.find('text').text + "\n")
                     data.append(i.find('date').text + "\n")
                     insert_into_file.append(data)
@@ -97,7 +97,7 @@ class FromXml(FileInsert):
                     break
             elif i.get('type') == 'Question-divination':
                 try:
-                    data.append('News:')
+                    data.append('Question-divination:')
                     data.append(i.find('question').text + "\n")
                     data.append(i.find('answer').text + "\n")
                     data.append(i.find('conclusion').text + "\n")
